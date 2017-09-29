@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>JoyGame | 一个怀旧的游戏平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="JoyLau, joylau, JoyMusic, music"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="http://css.joylau.cn/fontawesome-4.2.0_ie7/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://css.joylau.cn/fontawesome-4.2.0_ie7/css/font-awesome-ie7.min.css">
+    <script src="http://cdn.bootcss.com/jquery/1.9.0/jquery.min.js"></script>
+    <script src="http://music.joylau.cn/js/background-blur.min.js"></script>
+    <style type="text/css">
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: scroll;
+            margin: 0;
+            position: relative;
+        }
+
+        html,body {
+            width: 100%;
+            height: 120%;
+        }
+
+        .d-container {
+            padding: 50px;
+        }
+
+        .avatar-blur {
+            z-index: -2;
+            position: absolute;
+            top: 0;
+            min-height: 100%;
+            height: 100%;
+            display: block;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<div class="d-container">
+    <h1 class="ue_t"
+        style="border-bottom-color:#cccccc;border-bottom-width:2px;border-bottom-style:solid;padding:0px 4px 0px 0px;text-align:center;margin:0px 0px 20px;">
+        <span style="color: rgb(192, 80, 77); font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">JoyGame 游戏平台</span>
+    </h1>
+    <p style="text-align:center;">
+        <span style="font-family: &#39;comic sans ms&#39;;"><strong>by JoyLau</strong></span>
+    </p>
+    <h3>
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">[这是什么？]</span>
+    </h3>
+    <p style="text-indent:2em;">
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">这是一个单机游戏的对战平台，现在支持的游戏有：冰封王座，星际争霸，帝国时代2，流星蝴蝶剑，红警2，近期最主要玩的是红警2，怀恋一下以前玩的单机游戏。<br/></span>
+    </p>
+    <h3>
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">[哪些人在玩？]</span>
+    </h3>
+    <p style="text-indent:2em;">
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">该平台刚刚发布，目前在玩的玩家就我和我的哥们儿几个。==|<br/></span>
+    </p>
+    <div class="songArea">
+        <embed style="margin-left:30%;width:340px;"
+               src="http://music.163.com/style/swf/widget.swf?sid=464373910&type=2&auto=1&width=320&height=66"
+               height="80" allowNetworking="all">
+        </embed>
+    </div>
+    <h3>
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">[其他]</span>
+    </h3>
+    <p>
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">&nbsp;&nbsp;&nbsp;&nbsp;QQ：2587038142</span>
+    </p>
+    <p>
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">&nbsp;&nbsp;&nbsp;&nbsp;博客：</span><a
+            href="http://blog.joylau.cn/" target="_self"
+            style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;; text-decoration: underline;"><span
+            style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">JoyLau Blog</span></a>
+    </p>
+    <p style="text-align: right;">
+        <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2017年9月8日</span>
+    </p>
+    <div style="position:fixed;right:30px;bottom:15px;color: #2ebfdc;z-index: 1000" class="f-button">
+        <a class="changeSong" title="切换歌曲"><i class="fa fa-4x fa-refresh"></i>
+        </a>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var userAgent = navigator.userAgent;
+
+    var songArr = [];
+    $('body').backgroundBlur({
+        imageURL: 'http://image.joylau.cn/blog/background/bg-10.jpg',
+        blurAmount: 50,
+        imageClass: 'avatar-blur',
+        duration: 1000, // If the image needs to be faded in, how long that should take
+        endOpacity: 1 // Specify the final opacity that the image will have
+    });
+
+
+    $(document).ready(function () {
+        $.getJSON("http://music.joylau.cn/apis/playList/detail/307243535", function (data) {
+           $.each(data.result.tracks,function (i,e){
+               songArr.push({id:e.id,pic:e.album.picUrl})
+            })
+        })
+    })
+
+    $('.changeSong').click(function () {
+        var songIndex = Math.round(Math.random()*songArr.length);
+        var song = songArr[songIndex];
+        /*换背景*/
+        $('body').backgroundBlur(song.pic);
+        /*切歌*/
+        var html = '<embed style="margin-left:30%;width:340px;"' +
+            'src="http://music.163.com/style/swf/widget.swf?sid='+song.id+'&type=2&auto=1&width=320&height=66"' +
+            'height="80" allowNetworking="all">' +
+            '</embed>';
+        $('.songArea').empty().append(html);
+    })
+</script>
