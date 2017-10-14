@@ -14,14 +14,19 @@
         body {
             height: 100%;
             width: 100%;
-            overflow: scroll;
             margin: 0;
-            position: relative;
         }
 
         html,body {
             width: 100%;
-            height: 120%;
+            height: 100%;
+            min-width: 340px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        html {
+            overflow-y: hidden;
+            overflow-x: hidden;
         }
 
         .d-container {
@@ -61,11 +66,8 @@
     <p style="text-indent:2em;">
         <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">该平台刚刚发布，目前在玩的玩家就我和我的哥们儿几个。==|<br/></span>
     </p>
-    <div class="songArea">
-        <embed style="margin-left:30%;width:340px;"
-               src="http://music.163.com/style/swf/widget.swf?sid=464373910&type=2&auto=1&width=320&height=66"
-               height="80" allowNetworking="all">
-        </embed>
+    <div class="songArea" style="text-align: center">
+        音乐加载中....
     </div>
     <h3>
         <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">[其他]</span>
@@ -82,44 +84,49 @@
     <p style="text-align: right;">
         <span style="font-family: 微软雅黑, &#39;Microsoft YaHei&#39;;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2017年9月8日</span>
     </p>
-    <div style="position:fixed;right:30px;bottom:15px;color: #2ebfdc;z-index: 1000" class="f-button">
-        <a class="changeSong" title="切换歌曲"><i class="fa fa-4x fa-refresh"></i>
-        </a>
-    </div>
+</div>
+<div style="position:fixed;right:8%;top:8%;color: #2ebfdc;z-index: 1000" class="f-button">
+    <a class="changeSong" title="切换歌曲"><i class="fa fa-4x fa-refresh"></i>
+    </a>
 </div>
 </body>
 </html>
 <script>
     var userAgent = navigator.userAgent;
-
     var songArr = [];
-    $('body').backgroundBlur({
-        imageURL: 'http://image.joylau.cn/blog/background/bg-10.jpg',
-        blurAmount: 50,
-        imageClass: 'avatar-blur',
-        duration: 1000, // If the image needs to be faded in, how long that should take
-        endOpacity: 1 // Specify the final opacity that the image will have
-    });
-
-
     $(document).ready(function () {
-        $.getJSON("http://music.joylau.cn/apis/playList/detail/307243535", function (data) {
+        /*替换背景图片*/
+        $('body').backgroundBlur({
+            imageURL: 'http://image.joylau.cn/blog/background/bg-10.jpg',
+            blurAmount: 20,
+            imageClass: 'avatar-blur',
+            duration: 1500, // If the image needs to be faded in, how long that should take
+            endOpacity: 1 // Specify the final opacity that the image will have
+        });
+
+        /*加载数据*/
+        $.getJSON("http://60.166.12.138:6001/apis/playList/detail/307243535", function (data) {
            $.each(data.result.tracks,function (i,e){
                songArr.push({id:e.id,pic:e.album.picUrl})
-            })
+            });
+            $('.changeSong').click();
         })
-    })
+    });
 
     $('.changeSong').click(function () {
-        var songIndex = Math.round(Math.random()*songArr.length);
+        if (songArr.length === 0) {
+            return;
+        }
+        var songIndex = Math.round(Math.random() * songArr.length);
         var song = songArr[songIndex];
         /*换背景*/
-        $('body').backgroundBlur(song.pic);
+        $('body').backgroundBlur(song.pic + '?param=400y400');
+        var left = ($(window).width() - 340) / 2;
         /*切歌*/
-        var html = '<embed style="margin-left:30%;width:340px;"' +
-            'src="http://music.163.com/style/swf/widget.swf?sid='+song.id+'&type=2&auto=1&width=320&height=66"' +
+        var songInfo = '<embed style="margin-left:' + left + ';width:340px;"' +
+            'src="http://music.163.com/style/swf/widget.swf?sid=' + song.id + '&type=2&auto=1&width=320&height=66"' +
             'height="80" allowNetworking="all">' +
             '</embed>';
-        $('.songArea').empty().append(html);
-    })
+        $('.songArea').empty().append(songInfo);
+    });
 </script>
